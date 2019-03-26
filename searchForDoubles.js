@@ -1,3 +1,4 @@
+// a class for buffering speech
 var speechBuffer = function(){
 	this.queue = [];
 	this.lastSpoke = 0;
@@ -39,17 +40,63 @@ speechBuffer.prototype.speak = function(){
 	return rval;
 }
 
+// throw in some globals
 var itemList = {};
 var speech = new speechBuffer();
 var ignoreList = buildIgnoreList();
+var quitting = false;
 
+// Let's Do It!
 function update(my) {
 	var reaction = {};
-	var block, x, y, n, placements;
-	var dx, dy, found;
 
-	logFresh();
+	scanForDoubles(my);
+	checkInput(my);
 
+	reaction.speech = speech.speak();
+
+	if(quitting == true){
+		reaction.unequip = true;
+	}
+
+	return reaction;
+}
+
+function checkInput(my){
+	var n, dx, dy, found
+	// now let's check for any additional commands
+	for(n in my.hearing){
+		if(my.hearing[n].fromId == my.id){
+			switch(my.hearing[n].content){
+				case ':help': case 'help':
+					list_commands();
+					break;
+				case ':list':
+					list_doubles();
+					break;
+				case ':closest':
+					found = find_closest_double(my);
+					if(found != undefined){
+						speech.say(found.name);
+						dx = Math.round((found.x - my.x) / 19);
+						dy = Math.round((found.y - my.y) / 19);
+						speech.say(Math.abs(dx) + ' ' + (dx >= 0 ? 'right' : 'left'));
+						speech.say(Math.abs(dy) + ' ' + (dy >= 0 ? 'down' : 'up'));
+					}
+					break;
+				case ':quit':
+					quitting = true;
+					break;
+				default:
+					break;
+			}
+			
+		}
+	}
+}
+// scan the range of view for duplicates
+function scanForDoubles(my){
+	var x, y, n, dx, dy, block, placements;
 	for(y = 0; y <= 2 * my.sight.scope; y++){
 		for(x = 0; x <= 2 * my.sight.scope; x++){
 			block = my.sight.placements[x][y];
@@ -61,7 +108,6 @@ function update(my) {
 				continue;
 			}
 			if(ignoreList.indexOf(block.name) >= 0){
-				log('skipping ' + block.name);
 				continue;
 			}
 
@@ -100,40 +146,6 @@ function update(my) {
 			}
 		}
 	}
-
-	// now let's check for any additional commands
-	for(n in my.hearing){
-		if(my.hearing[n].fromId == my.id){
-			switch(my.hearing[n].content){
-				case ':help': case 'help':
-					list_commands();
-					break;
-				case ':list':
-					list_doubles();
-					break;
-				case ':closest':
-					found = find_closest_double(my);
-					if(found != undefined){
-						speech.say(found.name);
-						dx = Math.round((found.x - my.x) / 19);
-						dy = Math.round((found.y - my.y) / 19);
-						speech.say(Math.abs(dx) + ' ' + (dx >= 0 ? 'right' : 'left'));
-						speech.say(Math.abs(dy) + ' ' + (dy >= 0 ? 'down' : 'up'));
-					}
-					break;
-				case ':quit':
-					reaction.unequip = true;
-					break;
-				default:
-					break;
-			}
-			
-		}
-	}
-
-	reaction.speech = speech.speak();
-
-	return reaction;
 }
 
 function list_commands(){
@@ -181,6 +193,16 @@ function squareDist(p1, p2){
 }
 
 function buildIgnoreList(){
+	/*
+	For anyone else who might use this code: This Manyland Brain was written to
+	help me find pieces that have been placed multiple times in the same world.
+	There are however some things that I expect to see multiple instances of, and
+	this is a list of those items' names.
+
+	This chunk of data is only relevant to my instance of this code in maintaining
+	"Green Mountain Gallery".  If you plan on using this code elsewhere, these
+	should be removed or replaced.
+	*/
 	return Array(
 
 		// very big things that are doubled in compositions
