@@ -1,3 +1,10 @@
+/*
+Hey Manylanders!  Having trouble reading this code in the game?
+Check it out on github!
+
+https://github.com/jacobEwing/manylandCode
+*/
+
 // a class for buffering speech
 var speechBuffer = function(){
 	this.queue = [];
@@ -38,6 +45,10 @@ speechBuffer.prototype.speak = function(){
 		}
 	}
 	return rval;
+}
+
+speechBuffer.prototype.flush = function(){
+	this.queue = [];
 }
 
 // throw in some globals
@@ -86,6 +97,9 @@ function checkInput(my){
 					break;
 				case ':quit':
 					quitting = true;
+					break;
+				case '::':
+					speech.flush();
 					break;
 				default:
 					break;
@@ -152,7 +166,9 @@ function list_commands(){
 	speech.say('Available Commands:');
 	speech.say(':list - describe any duplicates found');
 	speech.say(':closest - find the closest duplicate');
+	speech.say(':: - empty the speech buffer');
 	speech.say(':quit - detach this brain');
+
 }
 
 function list_doubles(){
