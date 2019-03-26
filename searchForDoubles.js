@@ -1,18 +1,38 @@
 var speechBuffer = function(){
 	this.queue = [];
 	this.lastSpoke = 0;
+	this.frequency = 1600;
 }
 
 speechBuffer.prototype.say = function(speech){
-	this.queue[this.queue.length] = speech;
+	var parts, n, str;
+	var maxLength = 20;
+
+	// Speech output from the user can only be 20 characters or less, so we might
+	// need to split it up.  Note that this won't account for strings that have
+	// more than twenty characters without a space.
+	parts = speech.split(' ');
+	str = parts[0];
+	for(n = 1; n < parts.length; n++){
+		if((str + ' ' + parts[n]).length > maxLength){
+			this.queue[this.queue.length] = str;
+			str = parts[n];
+		}else{
+			str += ' ';
+			str += parts[n];
+		}
+	}
+	if(str.length > 0){
+		this.queue[this.queue.length] = str;
+	}
 }
 
 speechBuffer.prototype.speak = function(){
 	var rval = null;
 	var now = new Date().getTime();
-	if(this.lastSpoke < now - 1600){
-		this.lastSpoke = now;
-		if(this.queue.length > 0){
+	if(this.queue.length > 0){
+		if(this.lastSpoke < now - this.frequency){
+			this.lastSpoke = now;
 			rval = this.queue.shift();
 		}
 	}
@@ -85,6 +105,9 @@ function update(my) {
 	for(n in my.hearing){
 		if(my.hearing[n].fromId == my.id){
 			switch(my.hearing[n].content){
+				case ':help': case 'help':
+					list_commands();
+					break;
 				case ':list':
 					list_doubles();
 					break;
@@ -111,6 +134,13 @@ function update(my) {
 	reaction.speech = speech.speak();
 
 	return reaction;
+}
+
+function list_commands(){
+	speech.say('Available Commands:');
+	speech.say(':list - describe any duplicates found');
+	speech.say(':closest - find the closest duplicate');
+	speech.say(':quit - detach this brain');
 }
 
 function list_doubles(){
