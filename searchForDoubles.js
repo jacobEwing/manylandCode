@@ -2,7 +2,7 @@
 Hey Manylanders!  Having trouble reading this code in the game?
 Check it out on github!
 
-https://github.com/jacobEwing/manylandCode
+github.com/jacobEwing/manylandCode
 */
 
 // a class for buffering speech
@@ -17,14 +17,21 @@ speechBuffer.prototype.say = function(speech){
 	var maxLength = 20;
 
 	// Speech output from the user can only be 20 characters or less, so we might
-	// need to split it up.  Note that this won't account for strings that have
-	// more than twenty characters without a space.
+	// need to split it up.  
 	parts = speech.split(' ');
 	str = parts[0];
+	while(str.length > maxLength){
+		this.queue[this.queue.length] = str.slice(0, (maxLength - 1)) + '-';
+		str = str.slice((maxLength - 1));
+	}
 	for(n = 1; n < parts.length; n++){
 		if((str + ' ' + parts[n]).length > maxLength){
 			this.queue[this.queue.length] = str;
 			str = parts[n];
+			while(str.length > maxLength){
+				this.queue[this.queue.length] = str.slice(0, (maxLength - 1)) + '-';
+				str = str.slice((maxLength - 1));
+			}
 		}else{
 			str += ' ';
 			str += parts[n];
