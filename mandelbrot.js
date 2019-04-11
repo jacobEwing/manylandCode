@@ -58,7 +58,7 @@ function createColour(idx){
 	 (or 0 and 1 for alpha).
 	*/
 	return {
-		red :   Math.floor(128 + 127 * Math.sin(ang + 6)),
+		red :   Math.floor(128 + 127 * Math.sin(ang + 1)),
 		green : Math.floor(128 + 127 * Math.sin(ang + .5)),
 		blue :  Math.floor(128 + 127 * Math.sin(ang)),
 		alpha : 1
