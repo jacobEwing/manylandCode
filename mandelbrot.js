@@ -51,7 +51,7 @@ var gridSize = 1;
 */
 function createColour(idx){
 	var ang = idx * 2 * Math.PI / (maxColourIndex - 1);
-	
+
 	/*
 	 Play with these numbers to fiddle with the colours,
 	 but remember they have to be between 0 and 255
@@ -69,30 +69,28 @@ function createColour(idx){
  to modify the output is above this line.
 ********************************************/
 
-var gridx, gridy;
-var resolution;
-var creation;
-
+var gridx, gridy, resolution;
+var creation, isChanger;
 var maxColourIndex = 55;
 
 
 function change(c) {
 	var n;
 	creation = c;
-	var isChanger = creation.type == enumType.changer;
+	isChanger = creation.type == enumType.changer;
 	if(isChanger){
 		// this is to make it easier to see what the whole picture is on the changer
 		gridSize = 1;
 	}
-	
+
 	buildPalette();
-	
+
 	checkParams();
 	viewRange.w /= gridSize;
 	viewRange.h /= gridSize;
 	viewRange.x += (gridx - 1) * viewRange.w;
 	viewRange.y += (gridy - 1) * viewRange.h;
-	
+
 	draw();
 	if(isChanger){
 		// just to make it clear what this is, add a border if we're editing
@@ -105,21 +103,30 @@ function change(c) {
 			cell[n][18] = cIndex;
 			cell[18][n] = cIndex;
 		}
-		
+
 	}
 	return creation;
 }
 
 function checkParams(){
 	// we're looking for the co-ordinate in brackets - like (1, 2)
+	// as well as the grid size, "size:3" or the like
+
 	var parts = creation.name.split('(');
 	var foundPos = 0, baseName;
+	var n;
+
+	for(n in parts){
+		if(parts[n].match(/size:[0-9]/)){
+		    gridSize = 1 * parts[n].split(':').pop();
+		}
+	}
 	if(parts.length == 2){
 		baseName = parts[0];
 		parts = parts[1].split(')');
 		if(parts.length == 2){
 			parts = parts[0].split(',');
-			
+
 			console.log(parts.length);
 			if(parts.length == 2){
 				gridx = 1 * parts[0];
@@ -139,13 +146,15 @@ function checkParams(){
 	}else{
 		gridx = 1;
 		gridy = 1;
-		creation.name += " (1, 1)";
+		if(!isChanger && gridSize > 1){
+		    creation.name += " (1, 1)";
+		}
 	}
 }
 
 function buildPalette(){
 	var n;
-	creation.colors[maxColourIndex] = {red : 0, green : 0, blue : 0, alpha : 1};	
+	creation.colors[maxColourIndex] = {red : 0, green : 0, blue : 0, alpha : 1};
 	for(n = 0; n < maxColourIndex; n++){
 		creation.colors[n] = createColour(n);
 	}
@@ -155,7 +164,7 @@ function draw(){
 	var x, y, c;
 	var cells = creation.cells;
 	var x, y, cx, cy;
-	
+
 	resolution = {
 		x : cells[0].length,
 		y : cells[0][0].length
