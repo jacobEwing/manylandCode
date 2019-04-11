@@ -81,6 +81,7 @@ function change(c) {
 	creation = c;
 	var isChanger = creation.type == enumType.changer;
 	if(isChanger){
+		// this is to make it easier to see what the whole picture is on the changer
 		gridSize = 1;
 	}
 	
@@ -94,6 +95,8 @@ function change(c) {
 	
 	draw();
 	if(isChanger){
+		// just to make it clear what this is, add a border if we're editing
+		// the changer.
 		var cell = creation.cells[0];
 		var cIndex = (cell[0][0] + 28) % 56
 		for(n = 0; n < 19; n++){
@@ -121,7 +124,6 @@ function checkParams(){
 			if(parts.length == 2){
 				gridx = 1 * parts[0];
 				gridy = 1 * parts[1];
-	console.log(gridx + ', ' + gridy);
 				gridx = gridx < 1 ? 1 : (gridx > gridSize ? gridSize : gridx);
 				gridy = gridy < 1 ? 1 : (gridy > gridSize ? gridSize : gridy);
 				foundPos = 1;
