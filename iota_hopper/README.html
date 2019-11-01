@@ -1,0 +1,101 @@
+<html>
+<body>
+	<p>
+	This is just a handy place to keep and organize the excessive number of scripts
+	used in the area "space" in Manyland.  This will allow us to keep track of them
+	in a shared and readable manner, rather than having to search around the
+	universe for and its subareas to find the right script for reference.
+	</p>
+
+	<h3>Iota Hopper</h3>
+	<p>
+	The following scripts are currently used in the spaceship "iota hopper"
+	(subarea of that name):
+	</p>
+
+	<ul>
+		<li>"console operations"
+			<p>
+				This is the main code used for warping around and for beaming down or docking. The interacting resides at the very top of the chair. It does three core operations:
+				<ol>
+					<li>Performs the graphical end and state change when warping:
+						<ul>
+							<li>placing the warp animation </li>
+							<li>bumping the user upward to close the holder</li>
+							<li>erasing the block at 0, -1, which breaks the feedback loop keeping the current location componets rendered (planet, station, etc.)</li>
+							<li>removes their target state (e.g. "THEY AREN'T TARGET KARRAKAS")</li>
+							<li>sets their new location state (e.g. "THEY ARE AT KARRAKAS")</li>
+						</ul>
+					</li>
+					<li>Provide feedback for operations that are not valid.  As of this writing that includes:
+						<ul>
+							<li>Pressing "beam" when not at a planet</li>
+							<li>Pressing "dock" when not at a station<li>
+							<li>Pressing "warp" with no target selected</li>
+						</ul>
+					</li>
+					<li>Handle beaming to planets or docking at stations
+						<p>There needs to be a row here for every location in the universe that one would transition into (planet, station, etc.)</p>
+					</li>
+				</ol>
+			</p>
+		</li>
+		<li>engage engines
+			<p>
+				Used in the "engage" button in the control panel.  Currenttly it gives them the
+				"they push warp" action and removes their states of being "at" anything.  That
+				is a problem though, because if they are somewhere and push warp without
+				setting a course, then they lose their status of being at that place and
+				beaming/docking won't work.  That state removal will have to be moved to the
+				console operations script instead I think.
+			<p>
+		</li>
+		<li>example_pong
+			<p>
+				A sample of the code that goes in the "pong" interacting for any additional
+				graphics that need to be added to the scene (planets, stations, whatever).  The
+				code is identical between them, but the name must be unique to each of them.
+				For Karrakas, I'm currently using "KARRAKAS_PONG" as the interacting name.
+			</p>
+			<p>
+				These need to be added as items to the planet_placer script, and a line added
+				for each.
+			</p>
+			
+		</li>
+		<li>planet_placer
+			<p>
+				The actual code that handles the consistent placement of a
+				planet/station/whatever.  It uses a looping technique described by Cyel in the
+				code sharing board.
+			</p>
+			<p>
+				There must be one pair of lines for each circumstance that has elements added
+				to it.  One of those lines places the pong interacting and pings it.  The other
+				line, upon hearing the pong, places the objects and sends another ping,
+				repeating the cycle.
+			</p>
+		</li>
+		<li>remove stuff
+			<p>
+				Used to remove items worn when transitioning into the ship, and to remove
+				states of transition (they aren't fromstationmain, removes *, etc.)
+			</p>
+
+			<p>
+				At the moment, this script winds up removing a bunch of things "/THEY AREN'T
+				FROMSTATION9B /THEY AREN'T FROMSTATIONMAIN..." It seems to me that we can
+				choose universal states like "leaving ship" and "entering ship" to go between
+				all of the various transitions.  As is the scripts in the transitional worlds
+				have a case for each individual ship they could be transferring to, so we could
+				make the scripts more consistent this way without adding code.  I'll look into
+				this soon.
+			</p>
+		</li>
+	</ul>
+
+
+
+
+</body>
+</html>

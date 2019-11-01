@@ -9,7 +9,7 @@ github.com/jacobEwing/manylandCode
 var speechBuffer = function(){
 	this.queue = [];
 	this.lastSpoke = 0;
-	this.frequency = 1600;
+	this.frequency = 2000;
 }
 
 speechBuffer.prototype.say = function(speech){
@@ -17,7 +17,7 @@ speechBuffer.prototype.say = function(speech){
 	var maxLength = 20;
 
 	// Speech output from the user can only be 20 characters or less, so we might
-	// need to split it up.  
+	// need to split it up.
 	parts = speech.split(' ');
 	str = parts[0];
 	while(str.length > maxLength){
@@ -63,6 +63,13 @@ var itemList = {};
 var speech = new speechBuffer();
 var ignoreList = buildIgnoreList();
 var quitting = false;
+var allowedTypes = [
+	enumType.veryBigThing,
+	enumType.bigThing,
+	enumType.dynamic
+
+	//enumType.thing
+];
 
 // Let's Do It!
 function update(my) {
@@ -111,28 +118,36 @@ function checkInput(my){
 				default:
 					break;
 			}
-			
+
 		}
 	}
 }
+
+// determine whether or not this block should be checked at all
+function shouldTest(block){
+	var rval = true;
+	if(!block){
+		rval = false;
+	}else if(1 * allowedTypes.indexOf(block.type) < 0){
+		rval = false;
+	}else if(ignoreList.indexOf(block.name.toLowerCase()) >= 0){
+		rval = false
+	}
+	return rval;
+}
+
 // scan the range of view for duplicates
 function scanForDoubles(my){
 	var x, y, n, dx, dy, block, placements;
 	for(y = 0; y <= 2 * my.sight.scope; y++){
 		for(x = 0; x <= 2 * my.sight.scope; x++){
 			block = my.sight.placements[x][y];
-			if(!block){
+
+			if(!shouldTest(block)){
 				continue;
 			}
 
-			if(block.type != enumType.veryBigThing && block.type != enumType.bigThing && block.type != enumType.dynamic){
-				continue;
-			}
-			if(ignoreList.indexOf(block.name) >= 0){
-				continue;
-			}
-
-			// looks good, now record and count it
+			// record this item
 			if(itemList[block.id] == undefined){
 				itemList[block.id] = {
 					name : block.name,
@@ -245,6 +260,29 @@ function buildIgnoreList(){
 		"ceiling fan",
 		"vertical tile",
 		"light test",
-		"display win" + "dow"
+		"display win" + "dow",
+		"art frame"
+/*
+		// things that are used in the gallery
+		"light blue weave",
+		"door siding",
+		"charlie blue",
+		"brown diagonal w. vertical amber strip",
+		"blah",
+		"wallpaper",
+		"museum flooring end tip",
+		"fine diamond wallpaper",
+		"woven greens",
+		"grey cyan tiny crosses",
+		"rough mud stone",
+		"museum flooring long end tip",
+		"museum flooring long end cap",
+		"museum flooring end cap",
+		"yay another wallpaper",
+		"purple zig",
+		"midnight willow picture 2",
+		"test"
+*/		
+
 	);
 }
