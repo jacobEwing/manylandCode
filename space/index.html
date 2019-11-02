@@ -10,11 +10,11 @@
 	<h3>Iota Hopper</h3>
 	<p>
 	The following scripts are currently used in the spaceship "iota hopper"
-	(subarea of that name):
+	(subarea of that name).  The are all placed directly above the player.
 	</p>
 
 	<ul>
-		<li>"console operations"
+		<li>console operations
 			<p>
 				This is the main code used for warping around and for beaming down or docking. The interacting resides at the very top of the chair. It does three core operations:
 				<ol>
@@ -23,7 +23,7 @@
 							<li>placing the warp animation </li>
 							<li>bumping the user upward to close the holder</li>
 							<li>erasing the block at 0, -1, which breaks the feedback loop keeping the current location componets rendered (planet, station, etc.)</li>
-							<li>removes their target state (e.g. "THEY AREN'T TARGET KARRAKAS")</li>
+							<li>gives them the action "TARGET RESET", which triggers the script of that name execute</li>
 							<li>sets their new location state (e.g. "THEY ARE AT KARRAKAS")</li>
 						</ul>
 					</li>
@@ -40,15 +40,21 @@
 				</ol>
 			</p>
 		</li>
-		<li>engage engines
+		<li>target reset
 			<p>
-				Used in the "engage" button in the control panel.  Currenttly it gives them the
-				"they push warp" action and removes their states of being "at" anything.  That
-				is a problem though, because if they are somewhere and push warp without
-				setting a course, then they lose their status of being at that place and
-				beaming/docking won't work.  That state removal will have to be moved to the
-				console operations script instead I think.
+				Perhaps not the perfect name for the script, it currently does two things:
+				<ul>
+					<li>Removes the player's target state (e.g. "THEY AREN'T TARGET KARRAKAS")</li>
+					<li>Remove their location state (e.g. "THEY AREN'T AT KARRAKAS")</li>
+				</ul>
+				This is called after the warp animation is initiated and before the player's
+				new "AT" state is assigned.
+			</p>
 			<p>
+				This will be a great potential place to put code that needs to be executed on
+				every single warp but that does not differ between locations, reducing the
+				actual amount of code used.
+			</p>
 		</li>
 		<li>example_pong
 			<p>
@@ -85,17 +91,42 @@
 			<p>
 				At the moment, this script winds up removing a bunch of things "/THEY AREN'T
 				FROMSTATION9B /THEY AREN'T FROMSTATIONMAIN..." It seems to me that we can
-				choose universal states like "leaving ship" and "entering ship" to go between
-				all of the various transitions.  As is the scripts in the transitional worlds
-				have a case for each individual ship they could be transferring to, so we could
-				make the scripts more consistent this way without adding code.  I'll look into
-				this soon.
+				choose universal states like "SHIP DEPARTURE" and "SHIP ARRIVAL" to go between
+				all of the various transitions.  As it is, the scripts in the transitional
+				worlds have a case for each individual ship they could be transferring to, so
+				we could make the scripts more consistent this way without adding code.  I'll
+				look into this soon.
 			</p>
 		</li>
+
+	<p>
+	There is also some minor code in use in the holders that are the ship's console:
+	</p>
+
+	<h5>Action Buttons</h5>
+	<ul>
+		<li>Warp
+			<p> Causes the player to use the "PUSH WARP" action, which triggers the console
+			operations script to process the warping given their current state.</p>
+		</li>
+		<li>Dock
+			<p>Make the player use the "DOCK STATION" action, which initiates that sequence
+			in console operations</p>
+		</li>
+		<li>Beam
+			<p> Uses the "BEAM DOWN" action, which also triggers actions in console
+			operations</p>
+		</li>
+		<li>Plot course
+			<p>Opens the holder that lets you select your target by navigating between
+			options.  Any location within opens a holder that should contain a description,
+			a close button, and a "set target" button.</p>
+
+			<p>As of this writing, the set target button has to go through all possible
+			target states and modify them appropriately.  This is a problem, as it means
+			that every single additional location requires updating those buttons.  This
+			will be problematic and should be moved to console operations.</p>
+		</li>
 	</ul>
-
-
-
-
 </body>
 </html>
