@@ -6,4 +6,4 @@ panel holder should be attached so it can be displayed, and the motion object
 possible target states.
 */
 
-TOUCHES: /THEY TARGET RESET /SHOWS CONTROL PANEL /THEY ARE TARGET MAIN
+TOUCHES: /THEY TARGET RESET /WAITS 0.25  /SHOWS CONTROL PANEL /THEY ARE TARGET MAIN
