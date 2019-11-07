@@ -1,11 +1,3 @@
-/*
-This big-ass one-liner's sole purpose is to remove the states "at <location>"
-and "target <location>".  It's called when the "console operations" script is
-executing a warp.  We split it off here so that we don't have to add one of the
-"they aren't at" statements to every warp setup in the conole operations
-script.
+/* Remove any current target statuses */
+SOMEONE DOES TARGET RESET: /THEY AREN'T TARGET KARRAKAS /THEY AREN'T TARGET MAIN /THEY AREN'T TARGET LYRIA /THEY AREN'T TARGET VULCANU /THEY AREN'T TARGET LIATRIS 9B STATION
 
-Every time a planet is added to the universe, a corresponding pair of /they
-aren't at and /they aren't target will need to be added here.
-*/
-SOMEONE DOES TARGET RESET: /THEY AREN'T TARGET KARRAKAS /THEY AREN'T AT KARRAKAS /THEY AREN'T TARGET MAIN /THEY AREN'T AT MAIN /THEY AREN'T TARGET LYRIA /THEY AREN'T AT LYRIA /THEY AREN'T TARGET VULCANU /THEY AREN'T AT VULCANU /THEY AREN'T TARGET LIATRIS 9B STATION /THEY AREN'T AT LIATRIS 9B STATION

@@ -12,7 +12,7 @@ The following scripts are currently used in the spaceship "iota hopper" (subarea
         *   placing the warp animation
         *   bumping the user upward to close the holder
         *   erasing the block at 0, -1, which breaks the feedback loop keeping the current location componets rendered (planet, station, etc.)
-        *   gives them the action "TARGET RESET", which triggers the script of that name execute
+        *   gives them the action "WARP RESET", which triggers the script of that name execute, removing all "AT [location]" and "TARGET [location]" states.
         *   sets their new location state (e.g. "THEY ARE AT KARRAKAS")
     2.  Provide feedback for operations that are not valid. As of this writing that includes:
         *   Pressing "beam" when not at a planet
@@ -24,10 +24,15 @@ The following scripts are currently used in the spaceship "iota hopper" (subarea
 
 *   target reset
 
-    Perhaps not the perfect name for the script, it currently does two things:
+    Removes the player's target state (e.g. "THEY AREN'T TARGET KARRAKAS")
 
-    *   Removes the player's target state (e.g. "THEY AREN'T TARGET KARRAKAS")
-    *   Remove their location state (e.g. "THEY AREN'T AT KARRAKAS")This is called after the warp animation is initiated and before the player's new "AT" state is assigned.
+*   warp reset
+
+    Currently does two things:
+
+    1.  Removes the player's "TARGET" state, e.g. "THEY AREN'T TARGET KARRAKAS".
+
+    2.  Removes the player's "AT" state, e.g. "THEY AREN'T AT LYRIA".
 
     This will be a great potential place to put code that needs to be executed on every single warp but that does not differ between locations, reducing the actual amount of code used.
 
@@ -43,6 +48,16 @@ The following scripts are currently used in the spaceship "iota hopper" (subarea
 
     There must be one pair of lines for each circumstance that has elements added to it. One of those lines places the pong interacting and pings it. The other line, upon hearing the pong, places the objects and sends another ping, repeating the cycle.
 
+*   Set Target Button
+
+    A sample of the code that needs to be used in each of the "SET TARGET" buttons in the console interface.  That button needs to do three things:
+
+    1.  Trigger the "target_reset" script to remove your old target location
+
+    2.  Set your new target location accordingly
+
+    3.  Boot you back to the main console window.
+
 *   remove stuff
 
     Used to remove items worn when transitioning into the ship, and to remove states of transition (they aren't fromstationmain, removes *, etc.)
@@ -51,7 +66,7 @@ The following scripts are currently used in the spaceship "iota hopper" (subarea
 
 There is also some minor code in use in the holders that are the ship's console:
 
-##### Action Buttons
+#### Action Buttons
 
 *   Warp
 
