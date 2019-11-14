@@ -84,8 +84,6 @@ There is also some minor code in use in the holders that are the ship's console:
 
     Opens the holder that lets you select your target by navigating between options. Any location within opens a holder that should contain a description, a close button, and a "set target" button.
 
-    As of this writing, the set target button has to go through all possible target states and modify them appropriately. This is a problem, as it means that every single additional location requires updating those buttons. This will be problematic and should be moved to console operations.
-
 
 ### Landing/Docking and departure
 
