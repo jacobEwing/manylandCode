@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript">
+		var canvas, context;
+		var colours;
+		window.onload = function(){
+			canvas = document.createElement('canvas');
+			canvas.width = 300;
+			canvas.height = 300;
+			canvas.style.border = '1px solid #000';
+
+			document.body.appendChild(canvas);
+			context = canvas.getContext('2d');
+
+			buildColours();
+			render();
+
+			/*
+			context.beginPath();
+			context.moveTo(10, 10);
+			context.lineTo(100, 20);
+			context.lineTo(50, 100);
+			context.closePath();
+			context.stroke();
+			*/
+		};
+
+		function buildColours(){
+			var n, numColours = 55, ang;
+			colours = Array();
+			for(n = 0; n < numColours; n++){
+				ang = n * 2 * Math.PI / numColours;
+					
+				colours[n] = {
+					red : Math.round(191 + 64 * Math.sin(ang)),
+					green : Math.round(191 + 64 * Math.sin(ang - 1)),
+					blue : Math.round(191 + 64 * Math.sin(ang - 2)),
+					alpha : 1
+				};
+
+			}
+		}
+
+		function putPixel(x, y, colourIndex){
+			var c;
+			if(x < 0 || y < 0 || x >= canvas.width || y >= canvas.height){
+				return;
+			}
+			//context.save();
+
+			c = "rgba(";
+			c += colours[colourIndex].red;
+			c += ',';
+
+			c += colours[colourIndex].green;
+			c += ',';
+
+			c += colours[colourIndex].blue;
+			c += ')';
+			context.fillStyle = c;
+			context.fillRect(x, y, 1, 1);
+
+
+
+			//context.restore();
+		}
+
+		function render(){
+			var x, y, c;
+			for(x = 0; x < canvas.width; x++){
+				for(y = 0; y < canvas.height; y++){
+					//c = (x ^ y) % colours.length;
+					c = mandelbrot(x, y, 4, 4, canvas.width, canvas.height, -2, -2);
+					putPixel(x, y, c % colours.length);
+				}
+			}
+		}
+
+		function mandelbrot(x, y, xrange, yrange, Wwidth, Wheight, xoffset, yoffset){
+			var accuracy = 255;
+			var c = (xrange / Wwidth) * x + xoffset;
+			var ci = (yrange / Wheight) * y + yoffset;
+			var count = 0;
+			var z = 0, zi = 0, zsq = 0;
+			var zisq = 0, nz = 0, nzi = 0;
+
+			while((count <= accuracy) && ((zsq + zisq) < 4.)){
+				nz = zsq - zisq;
+				nzi = (z * zi) * 2.;
+				z = nz + c;
+				zi = nzi + ci;
+				zsq = z * z;
+				zisq = zi * zi;
+				count++;
+			}
+			return count;
+		}
+
+	</script>
+</head>
+<body>
+</body>
+</html>
