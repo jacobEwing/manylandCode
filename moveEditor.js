@@ -6,8 +6,8 @@ function createTab(){
 		'position' : 'absolute',
 		'height' : '16px',
 		'width' : '48px',
-		'background' : '#989898',
-		'border': '2px solid rgb(184, 184, 184)',
+		'background' : '#9a9691',
+		'border': '2px solid #c7c2bc',
 		'border-width' : '2px 2px 0',
 		'border-radius' : '6px 6px 0 0'
 	};
