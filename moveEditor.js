@@ -47,7 +47,6 @@ function createTab(){
 			x : e.clientX,
 			y : e.clientY,
 		};
-		// disable selection of element contents while we're dragging
 
 		document.onmouseup = function(){
 			document.onmouseup = null;
